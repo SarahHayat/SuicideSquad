@@ -14,12 +14,38 @@ def secs2hours(secs):
 
 
 def main():
-    if not hasattr(psutil, "sensors_battery"):
-        return sys.exit("platform not supported")
-    batt = psutil.sensors_battery()
-    if batt is None:
-        return sys.exit("no battery is installed")
+    if hasattr(psutil, "sensor_temperature"):
+        temp = psutil.sensors_temperatures()
+    else:
+        temp = {}
+    if hasattr(psutil, "sensor_battery"):
+        batt = psutil.sensors_battery()
+    else:
+        batt = {}
+    if hasattr(psutil, "sensor_fans"):
+        fans = psutil.sensors_fans()
+    else:
+        fans = {}
 
+    if not any((temp, batt, fans)):
+        print("Can not read any information about temperature, battery and fans")
+        return
+
+    infos = set(list(temp) + list(fans))
+    for info in infos:
+        print(info)
+        # Temperature
+        if info in temp:
+            print("Temperature : ")
+            for entry in temp[info]:
+                print(" %-20s %s°C (high=%s°C, critical=%s°C)" % (entry.label or info, entry.current, entry.high, entry.critical))
+        # Fans
+        if info in fans:
+            print("Fans : ")
+            for entry in fans[info]:
+                print("%-20s %s RPM" % (entry.label or info, entry.current))
+
+    # Battery
     print("charge:     %s%%" % round(batt.percent, 2))
     if batt.power_plugged:
         print("status:     %s" % (
