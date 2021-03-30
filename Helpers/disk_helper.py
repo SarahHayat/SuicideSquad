@@ -2,7 +2,6 @@
 PsUtils function to get disks informations
 """
 import psutil
-
 from enum import Enum
 
 
