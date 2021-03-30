@@ -19,24 +19,30 @@ def secs2hours(secs):
 
 
 def main():
-    if hasattr(psutil, "sensor_temperature"):
+    if hasattr(psutil, "sensors_temperatures"):
+        print("temp ok")
         temp = psutil.sensors_temperatures()
     else:
+        print("temp not ok")
         temp = {}
-    if hasattr(psutil, "sensor_battery"):
+    if hasattr(psutil, "sensors_battery"):
         batt = psutil.sensors_battery()
     else:
         batt = {}
-    if hasattr(psutil, "sensor_fans"):
+    if hasattr(psutil, "sensors_fans"):
+        print("fans ok")
         fans = psutil.sensors_fans()
     else:
+        print("fans not ok")
         fans = {}
-
     if not any((temp, batt, fans)):
         print("Can not read any information about temperature, battery and fans")
         return
 
+    print(f'temp : {temp}')
+    print(f'fans : {fans}')
     infos = set(list(temp) + list(fans))
+
     for info in infos:
         print(info)
         # Temperature
@@ -53,8 +59,7 @@ def main():
     # Battery
     print("charge:     %s%%" % round(batt.percent, 2))
     if batt.power_plugged:
-        print("status:     %s" % (
-            "charging" if batt.percent < 100 else "fully charged"))
+        print("status:     %s" % ("charging" if batt.percent < 100 else "fully charged"))
         print("plugged in: yes")
     else:
         print("left:       %s" % secs2hours(batt.secsleft))
