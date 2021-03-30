@@ -79,10 +79,7 @@ def get_disk_satistique_io():
 
     """
     io_data = psutil.disk_io_counters()
-    result = dict({"read_count": io_data.read_count,
-                   "write_count": io_data.write_count,
-                   "read_bytes": io_data.read_bytes,
-                   "write_bytes": io_data.write_bytes})
-    return result
-
-
+    return dict({"read_count": io_data.read_count,
+                 "write_count": io_data.write_count,
+                 "read_bytes": io_data.read_bytes,
+                 "write_bytes": io_data.write_bytes})
