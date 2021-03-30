@@ -1,5 +1,6 @@
-""" diskHelper Module
-PsUtils function to get disks informations
+"""
+Module Collecting disk's Informations
+by Corentin Vallois
 """
 import psutil
 from enum import Enum

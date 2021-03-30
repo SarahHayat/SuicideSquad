@@ -1,3 +1,8 @@
+"""
+Module Collecting sensor's Informations
+by Juan-Fernando Herrada
+"""
+
 from __future__ import print_function
 
 import sys

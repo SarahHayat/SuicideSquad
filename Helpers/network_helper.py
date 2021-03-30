@@ -1,3 +1,8 @@
+"""
+Module Collecting network's Informations
+by Jonathan Debailleux
+"""
+
 import psutil
 from psutil._common import bytes2human
 
