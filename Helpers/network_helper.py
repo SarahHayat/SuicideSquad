@@ -4,7 +4,6 @@ by Jonathan Debailleux
 """
 
 import psutil
-from psutil._common import bytes2human
 
 
 def get_net_io_sent_recv():
@@ -17,19 +16,21 @@ def get_net_io_sent_recv():
 
     """
     io_counters = psutil.net_io_counters(pernic=True)
-    for nic, addrs in psutil.net_if_addrs().items():
-        print("%s:" % nic)
-        if nic in io_counters:
-            io = io_counters[nic]
-            print("    incoming       : ", end='')
-            print("bytes=%s, pkts=%s, errs=%s, drops=%s" % (
-                bytes2human(io.bytes_recv), io.packets_recv, io.errin,
-                io.dropin))
-            print("    outgoing       : ", end='')
-            print("bytes=%s, pkts=%s, errs=%s, drops=%s" % (
-                bytes2human(io.bytes_sent), io.packets_sent, io.errout,
-                io.dropout))
+    result = {}
+    for network_interface, addrs in psutil.net_if_addrs().items():
+        if network_interface in io_counters:
+            io = io_counters[network_interface]
+            result[network_interface] = dict({
+                "incoming": dict({"bytes": io.bytes_recv,
+                                  "pkts": io.packets_recv,
+                                  "errs": io.errin,
+                                  "drops": io.dropin}),
+                "out": dict({"bytes": io.bytes_sent,
+                             "pkts": io.packets_sent,
+                             "errs": io.errout,
+                             "drops": io.dropout})})
+
+    return result
 
 
-if __name__ == '__main__':
-    get_net_io_sent_recv()
+
