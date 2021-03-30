@@ -86,8 +86,3 @@ def get_disk_satistique_io():
     return result
 
 
-disks = get_all_partitions_path()
-percent = get_all_partitions_usage(disks[0], Disk_Usage_Properties.PERCENT)
-print(get_disk_satistique_io())
-print(disks)
-print(percent)
