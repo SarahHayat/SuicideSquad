@@ -6,16 +6,6 @@ import psutil
 from enum import Enum
 
 
-class Disk_Usage_Properties(Enum):
-    """
-            class enum to know wich field is accessible in result of psutil.disk_usage()
-    """
-    SIZE = "total"
-    USED = "used"
-    FREE = "free"
-    PERCENT = "percent"
-
-
 def get_all_partitions_path():
     """
             function to get all partitions path
@@ -36,13 +26,22 @@ def get_all_partitions_path():
         map(lambda disk: dict({"device": disk.device, "path": disk.mountpoint}), psutil.disk_partitions(True)))
 
 
-def get_all_partitions_usage(disk, property_in_result):
+class Disk_Usage_Properties(Enum):
     """
-            function to get all partitions usage percent
+            class enum to know wich field is accessible in result of psutil.disk_usage()
+    """
+    SIZE = "total"
+    USED = "used"
+    FREE = "free"
+    PERCENT = "percent"
 
-           get an array of dict with all
-           device name and usage percent
-           of each disk partitions
+
+def get_partition_usage(disk, property_in_result):
+    """
+            function to get partitions of a device usage for asked field
+
+            get dict with device name and asked field
+
 
 
             :param disk: dict {'device': '/dev/disk1s1s1', 'path': '/'}
@@ -52,7 +51,7 @@ def get_all_partitions_usage(disk, property_in_result):
 
             :Example:
 
-            >>> get_all_partitions_usage({'device': '/dev/disk1s1s1', 'path': '/'},Disk_Usage_Properties.PERCENT)
+            >>> get_partition_usage({'device': '/dev/disk1s1s1', 'path': '/'},Disk_Usage_Properties.PERCENT)
              [{'device': '/dev/disk1s1s1', 'percent': 2.6}, {'device': '/dev/disk1s5', 'percent': 0.3}]
     """
 
@@ -83,3 +82,6 @@ def get_disk_satistique_io():
                  "write_count": io_data.write_count,
                  "read_bytes": io_data.read_bytes,
                  "write_bytes": io_data.write_bytes})
+
+
+print(get_disk_satistique_io())
