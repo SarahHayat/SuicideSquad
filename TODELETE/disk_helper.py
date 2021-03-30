@@ -58,6 +58,40 @@ def get_partition_usage(disk, property_in_result):
     return dict({"device": disk.get("device"),
                  property_in_result.value: getattr(psutil.disk_usage(disk.get("path")), property_in_result.value)})
 
+def format_disk(disk):
+    usage = psutil.disk_usage(disk.mountpoint)
+    return dict({"device": disk.device,
+                 "mountpoint": disk.mountpoint,
+                 "fstype": disk.fstype,
+                 "opts": disk.opts,
+                 "maxfile": disk.maxfile,
+                 "maxpath": disk.maxpath,
+                 "size": usage.total,
+                 "used": usage.used,
+                 "free": usage.free,
+                 "percent": usage.percent
+                 })
+def get_all_partition_all_usage():
+    """
+            function to get partitions usage of a device for asked field
+
+            get dict with device name and asked field
+
+
+
+            :param disk: dict {'device': '/dev/disk1s1s1', 'path': '/'}
+            :param property_in_result: Enum Disk_Usage_Properties value
+            :return: A dict with all disk partitions's device name and path
+            :rtype: dict
+
+            :Example:
+
+            >>> get_partition_usage({'device': '/dev/disk1s1s1', 'path': '/'},Disk_Usage_Properties.PERCENT)
+             [{'device': '/dev/disk1s1s1', 'percent': 2.6}, {'device': '/dev/disk1s5', 'percent': 0.3}]
+    """
+    return dict({"partitions": list(map(lambda disk: format_disk(disk), psutil.disk_partitions(True))),
+                 "io_stats": get_disk_satistique_io()})
+
 
 def get_disk_satistique_io():
     """
@@ -84,4 +118,7 @@ def get_disk_satistique_io():
                  "write_bytes": io_data.write_bytes})
 
 
-print(get_disk_satistique_io())
+
+
+
+

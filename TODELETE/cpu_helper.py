@@ -49,5 +49,3 @@ def collecting_cpu_informations():
                  "percent_representation": [x / psutil.cpu_count() * 100 for x in psutil.getloadavg()]
                  })
 
-
-print(collecting_cpu_informations())

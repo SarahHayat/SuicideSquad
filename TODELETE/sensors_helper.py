@@ -30,4 +30,4 @@ def get_battery_data():
                  "left": batt.secsleft if type(batt.secsleft) == int else 0})
 
 
-print(get_battery_data())
+

@@ -1,16 +1,35 @@
-# This is a sample Python script.
+import signal
+import time
+import yaml
+from datetime import timedelta
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+import Helpers
+from Task_Scheduler import Task_Scheduler
+
+with open(r'config.yaml') as file:
+    yaml = yaml.load(file, Loader=yaml.FullLoader)
+
+WAIT_TIME_SECONDS = yaml.get("timer")
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+class ProgramKilled(Exception):
+    pass
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+def signal_handler(signum, frame):
+    raise ProgramKilled
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+if __name__ == "__main__":
+    signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
+    collecting_data = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS), execute=Helpers.collect_all_data)
+    collecting_data.start()
+
+    while True:
+        try:
+            time.sleep(1)
+        except ProgramKilled:
+            print("Program killed: running cleanup code")
+            collecting_data.stop()
+            break
