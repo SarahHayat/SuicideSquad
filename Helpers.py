@@ -79,7 +79,7 @@ def get_battery_data():
         return "no battery is installed"
 
     return dict({"charge": round(batt.percent, 2),
-                 "status": "charging" if batt.power_plugged else "discharging",
+                 "status": 0 if batt.power_plugged else 1,
                  "left": batt.secsleft if type(batt.secsleft) == int else 0})
 
 
