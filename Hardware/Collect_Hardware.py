@@ -1,14 +1,18 @@
 """ Module Collect_Hardware.py
-APi
+All function to collect and format data from hardware
 """
 import time
 
 import psutil
 
 
-def format_disk(disk):
+def get_partition(disk):
     """
-          TODO
+          get and format data of a partition at path
+
+          :return: dict of a partition data
+          :rtype: dict
+
     """
     usage = psutil.disk_usage(disk.mountpoint)
     return dict({"device": disk.device,
@@ -26,14 +30,14 @@ def format_disk(disk):
 
 def get_disk_satistique_io():
     """
-            Return system-wide disk I/O statistics as a named tuple including the following fields:
+            Return system-wide disk I/O statistics as dict including the following fields:
 
             read_count: number of reads
             write_count: number of writes
             read_bytes: number of bytes read
             write_bytes: number of bytes written
 
-            :return: description
+            :return: dict of system-wide disk I/O statistics
             :rtype: dict
 
              :Example:
@@ -49,12 +53,15 @@ def get_disk_satistique_io():
                  "write_bytes": io_data.write_bytes})
 
 
-def get_all_partition_all_usage():
+def get_disk_data():
     """
-            TODO
+            Return a dict who contains data of all partition and system-wide disk I/O statistics
+
+             :return: dict all partition and system-wide disk I/O statistics
+            :rtype: dict
 
     """
-    return dict({"partitions": list(map(lambda disk: format_disk(disk), psutil.disk_partitions(True))),
+    return dict({"partitions": list(map(lambda disk: get_partition(disk), psutil.disk_partitions(True))),
                  "io_stats": get_disk_satistique_io()})
 
 
@@ -90,7 +97,6 @@ def get_net_io_sent_recv():
             return system-wide network I/O statistics as a named tuple including
             the following attributes: bytes, packets, errors, packet dropped
 
-
     """
     io_counters = psutil.net_io_counters(pernic=False, nowrap=True)
     result = dict({
@@ -103,16 +109,15 @@ def get_net_io_sent_recv():
                      "errs": io_counters.errout,
                      "drops": io_counters.dropout})})
 
-
-
     return result
 
 
 def get_cpu_informations():
     """
             Collecting all CPU informations
-            :parameter times: number of times you want to execute
-            :return: description of cpu
+
+            :return: dict of all cpu
+            :rtype: dict
     """
     times_dict = dict({"times_user": psutil.cpu_times().user,
                        "times_system": psutil.cpu_times().system,
@@ -136,12 +141,6 @@ def get_cpu_informations():
                           "min": item.min,
                           "max": item.max
                           }))
-    # user: time spent by normal processes executing in user mode; on Linux this also includes guest time
-    # system: time spent by processes executing in kernel mode
-    # idle: time spent doing nothing
-
-    # ctx_switches: number of context switches (voluntary + involuntary) since boot.
-    # interrupts: number of interrupts since boot.
 
     return dict({"times_dict": times_dict,
                  "percent": psutil.cpu_percent(interval=1, percpu=True),
@@ -155,27 +154,22 @@ def get_cpu_informations():
 
 def collect_all_data():
     """
-            short descrition.
+           Return a dict with all collectible datas of the hardware.
 
-            fat description
-            multiline
-
-            :param name1: description
-            :param name2: description
-            :type name1: int
-            :type name2: string
-            :return: description
-            :rtype: int
+            :return: all collectible datas of the hardware
+            :rtype: dict
 
             :Example:
 
             >>> collect_all_data()
-            2
-    """
-    time.ctime()
-    return dict({"disk": get_all_partition_all_usage(),
+            {"disk": get_all_partition_all_usage(),
                 "cpu": get_cpu_informations(),
                 "battery": get_battery_data(),
-                "network": get_net_io_sent_recv()})
+                "network": get_net_io_sent_recv()}
 
-
+    """
+    time.ctime()
+    return dict({"disk": get_disk_data(),
+                 "cpu": get_cpu_informations(),
+                 "battery": get_battery_data(),
+                 "network": get_net_io_sent_recv()})

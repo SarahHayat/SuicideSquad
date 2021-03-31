@@ -35,7 +35,7 @@ if __name__ == "__main__":
 
     collecting_disk = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS),
                                      execute=send,
-                                     args=("disk", Collect_Hardware.get_all_partition_all_usage()))
+                                     args=("disk", Collect_Hardware.get_disk_data()))
     collecting_disk.start()
 
     collecting_network = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS),
