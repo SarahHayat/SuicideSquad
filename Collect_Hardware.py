@@ -103,6 +103,8 @@ def get_net_io_sent_recv():
                      "errs": io_counters.errout,
                      "drops": io_counters.dropout})})
 
+
+
     return result
 
 
