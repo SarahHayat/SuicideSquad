@@ -1,4 +1,4 @@
-import Helpers
+import Collect_Hardware
 from datetime import datetime
 import yaml
 from influxdb_client import InfluxDBClient, Point, WritePrecision
@@ -30,13 +30,13 @@ def send_dict_influxdb(pointName, mainObject, field=False):
 
 
 def send_battery_influx():
-    battery = Helpers.get_battery_data()
+    battery = Collect_Hardware.get_battery_data()
     send_dict_influxdb("battery", battery)
     print("battery send")
 
 
 def send_disk_influx():
-    disks = Helpers.get_all_partition_all_usage()
+    disks = Collect_Hardware.get_all_partition_all_usage()
     partitions = disks.get("partitions")
     io_stats = disks.get("io_stats")
     for partition in partitions:
@@ -56,7 +56,7 @@ def send_disk_influx():
 # networks
 
 def send_network_influx():
-    networks = Helpers.get_net_io_sent_recv()
+    networks = Collect_Hardware.get_net_io_sent_recv()
     for network in networks:
         tags = ("host", HOST)
         tagsNet = ("network", network)
@@ -77,7 +77,7 @@ def send_network_influx():
     print("network send")
 
 def send_cpu_influx():
-    cpus = Helpers.get_cpu_informations()
+    cpus = Collect_Hardware.get_cpu_informations()
     send_dict_influxdb("cpus", cpus, "times_dict")
     send_dict_influxdb("cpus", cpus, "stats")
     for index, percent in enumerate(cpus.get("percent")):
