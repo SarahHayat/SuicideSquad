@@ -1,4 +1,4 @@
-import Collect_Hardware
+from Hardware import Collect_Hardware
 from datetime import datetime
 import yaml
 from influxdb_client import InfluxDBClient, Point, WritePrecision
@@ -53,28 +53,29 @@ def send_disk_influx():
         write_api.write(bucket, org, point)
     print("disk send")
 
+
 # networks
 
 def send_network_influx():
     networks = Collect_Hardware.get_net_io_sent_recv()
-    for network in networks:
-        tags = ("host", HOST)
-        tagsNet = ("network", network)
-        net = networks.get(network)
-        for infos in net.get("incoming"):
-            point = Point("networks").tag("host", HOST).tag(*tagsNet).tag("direction", "in").field(infos, net.get(
-                "incoming").get(infos)).time(
-                datetime.utcnow(),
-                WritePrecision.NS)
-            write_api.write(bucket, org, point)
-        for infos in net.get("out"):
-            point = Point("networks").tag("host", HOST).tag(*tagsNet).tag("direction", "out").field(infos,
-                                                                                                    net.get("out").get(
-                                                                                                        infos)).time(
-                datetime.utcnow(),
-                WritePrecision.NS)
-            write_api.write(bucket, org, point)
-    print("network send")
+    tags = ("host", HOST)
+    for infos in networks.get("incoming"):
+        point = Point("networks").tag("host", HOST).tag("direction", "in").field(infos, networks.get(
+            "incoming").get(infos)).time(
+            datetime.utcnow(),
+            WritePrecision.NS)
+        write_api.write(bucket, org, point)
+    for infos in networks.get("out"):
+        point = Point("networks").tag("host", HOST).tag("direction", "out").field(infos,
+                                                                                  networks.get("out").get(
+                                                                                      infos)).time(
+            datetime.utcnow(),
+            WritePrecision.NS)
+        write_api.write(bucket, org, point)
+
+
+print("network send")
+
 
 def send_cpu_influx():
     cpus = Collect_Hardware.get_cpu_informations()

@@ -1,5 +1,5 @@
-""" name Module
-Description
+""" Module Collect_Hardware.py
+APi
 """
 import time
 
@@ -92,20 +92,18 @@ def get_net_io_sent_recv():
 
 
     """
-    io_counters = psutil.net_io_counters(pernic=True)
-    result = {}
-    for network_interface, addrs in psutil.net_if_addrs().items():
-        if network_interface in io_counters:
-            io = io_counters[network_interface]
-            result[network_interface] = dict({
-                "incoming": dict({"bytes": io.bytes_recv,
-                                  "pkts": io.packets_recv,
-                                  "errs": io.errin,
-                                  "drops": io.dropin}),
-                "out": dict({"bytes": io.bytes_sent,
-                             "pkts": io.packets_sent,
-                             "errs": io.errout,
-                             "drops": io.dropout})})
+    io_counters = psutil.net_io_counters(pernic=False, nowrap=True)
+    result = dict({
+        "incoming": dict({"bytes": io_counters.bytes_recv,
+                          "pkts": io_counters.packets_recv,
+                          "errs": io_counters.errin,
+                          "drops": io_counters.dropin}),
+        "out": dict({"bytes": io_counters.bytes_sent,
+                     "pkts": io_counters.packets_sent,
+                     "errs": io_counters.errout,
+                     "drops": io_counters.dropout})})
+
+
 
     return result
 
@@ -175,7 +173,9 @@ def collect_all_data():
             2
     """
     time.ctime()
-    print(dict({"disk": get_all_partition_all_usage(),
+    return dict({"disk": get_all_partition_all_usage(),
                 "cpu": get_cpu_informations(),
                 "battery": get_battery_data(),
-                "network": get_net_io_sent_recv()}))
+                "network": get_net_io_sent_recv()})
+
+
