@@ -69,7 +69,7 @@ def get_battery_data():
             :Example:
 
             >>> get_battery_data()
-            {'charge': 82, 'status': 'charging', 'left': 0}
+            {'charge': 82, 'status': 0, 'left': 0}
 
     """
     if not hasattr(psutil, "sensors_battery"):
