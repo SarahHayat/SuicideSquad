@@ -5,10 +5,12 @@ import yaml
 from datetime import timedelta
 
 from Bus.send import send
+from CliParser import execute
 from Hardware import Collect_Hardware
 
 from Helpers.Task_Scheduler import Task_Scheduler
 
+execute()
 with open(r'config.yaml') as file:
     yaml = yaml.load(file, Loader=yaml.FullLoader)
 
