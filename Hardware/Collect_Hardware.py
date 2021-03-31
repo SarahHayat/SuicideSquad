@@ -1,5 +1,5 @@
-""" name Module
-Description
+""" Module Collect_Hardware.py
+APi
 """
 import time
 
@@ -173,10 +173,9 @@ def collect_all_data():
             2
     """
     time.ctime()
-    print(dict({"disk": get_all_partition_all_usage(),
+    return dict({"disk": get_all_partition_all_usage(),
                 "cpu": get_cpu_informations(),
                 "battery": get_battery_data(),
-                "network": get_net_io_sent_recv()}))
+                "network": get_net_io_sent_recv()})
 
 
-get_net_io_sent_recv()
