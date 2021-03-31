@@ -1,0 +1,423 @@
+{
+  "disk": {
+    "partitions": [
+      {
+        "device": "/dev/disk1s1s1",
+        "mountpoint": "/",
+        "fstype": "apfs",
+        "opts": "ro,local,rootfs,dovolfs,journaled,multilabel",
+        "maxfile": 255,
+        "maxpath": 1024,
+        "size": 1000240963584,
+        "used": 19477319680,
+        "free": 718984073216,
+        "percent": 2.6
+      },
+      {
+        "device": "devfs",
+        "mountpoint": "/dev",
+        "fstype": "devfs",
+        "opts": "rw,local,dontbrowse,multilabel",
+        "maxfile": 31,
+        "maxpath": 127,
+        "size": 194048,
+        "used": 194048,
+        "free": 0,
+        "percent": 100
+      },
+      {
+        "device": "/dev/disk1s5",
+        "mountpoint": "/System/Volumes/VM",
+        "fstype": "apfs",
+        "opts": "rw,noexec,local,dovolfs,dontbrowse,journaled,multilabel,noatime",
+        "maxfile": 255,
+        "maxpath": 1024,
+        "size": 1000240963584,
+        "used": 3221245952,
+        "free": 718984073216,
+        "percent": 0.4
+      },
+      {
+        "device": "/dev/disk1s3",
+        "mountpoint": "/System/Volumes/Preboot",
+        "fstype": "apfs",
+        "opts": "rw,local,dovolfs,dontbrowse,journaled,multilabel",
+        "maxfile": 255,
+        "maxpath": 1024,
+        "size": 1000240963584,
+        "used": 331431936,
+        "free": 718984073216,
+        "percent": 0
+      },
+      {
+        "device": "/dev/disk1s6",
+        "mountpoint": "/System/Volumes/Update",
+        "fstype": "apfs",
+        "opts": "rw,local,dovolfs,dontbrowse,journaled,multilabel",
+        "maxfile": 255,
+        "maxpath": 1024,
+        "size": 1000240963584,
+        "used": 112087040,
+        "free": 718984073216,
+        "percent": 0
+      },
+      {
+        "device": "/dev/disk1s2",
+        "mountpoint": "/System/Volumes/Data",
+        "fstype": "apfs",
+        "opts": "rw,local,dovolfs,dontbrowse,journaled,multilabel",
+        "maxfile": 255,
+        "maxpath": 1024,
+        "size": 1000240963584,
+        "used": 257293230080,
+        "free": 718984073216,
+        "percent": 26.4
+      },
+      {
+        "device": "map auto_home",
+        "mountpoint": "/System/Volumes/Data/home",
+        "fstype": "autofs",
+        "opts": "rw,dontbrowse,automounted,multilabel",
+        "maxfile": 255,
+        "maxpath": 1024,
+        "size": 0,
+        "used": 0,
+        "free": 0,
+        "percent": 0
+      },
+      {
+        "device": "/dev/disk1s1",
+        "mountpoint": "/System/Volumes/Update/mnt1",
+        "fstype": "apfs",
+        "opts": "rw,local,dovolfs,dontbrowse,journaled,multilabel",
+        "maxfile": 255,
+        "maxpath": 1024,
+        "size": 1000240963584,
+        "used": 19477319680,
+        "free": 718984073216,
+        "percent": 2.6
+      }
+    ],
+    "io_stats": {
+      "read_count": 21243744,
+      "write_count": 25340683,
+      "read_bytes": 480689754112,
+      "write_bytes": 494080937984
+    }
+  },
+  "cpu": {
+    "times_dict": {
+      "times_user": 346644.69,
+      "times_system": 160860.07,
+      "times_idle": 5895204.9
+    },
+    "percent": [
+      28,
+      1,
+      28.7,
+      0,
+      20.2,
+      0,
+      18,
+      2,
+      9.9,
+      1,
+      8.9,
+      0,
+      11,
+      0,
+      6,
+      0
+    ],
+    "time_percent": [
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 1
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 1
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      },
+      {
+        "time_percent_user": 0,
+        "time_percent_system": 0,
+        "time_percent_idle": 0
+      }
+    ],
+    "count": 16,
+    "freq": [
+      {
+        "current": 2300,
+        "min": 2300,
+        "max": 2300
+      }
+    ],
+    "stats": {
+      "stats_ctx_switches": 69316,
+      "stats_interrupts": 838965,
+      "stats_soft_interrupts": 1431388202,
+      "stats_syscalls": 1359443
+    },
+    "percent_representation": [
+      15.5792236328125,
+      14.8590087890625,
+      16.17431640625
+    ]
+  },
+  "battery": {
+    "charge": 97,
+    "status": 1,
+    "left": 0
+  },
+  "network": {
+    "lo0": {
+      "incoming": {
+        "bytes": 149175296,
+        "pkts": 478793,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 149175296,
+        "pkts": 478793,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "en0": {
+      "incoming": {
+        "bytes": 3674878976,
+        "pkts": 56644572,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 4232556544,
+        "pkts": 86667637,
+        "errs": 301,
+        "drops": 0
+      }
+    },
+    "ap1": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "awdl0": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 82944,
+        "pkts": 663,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "llw0": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "en3": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "en4": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "en1": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "en2": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "bridge0": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "en5": {
+      "incoming": {
+        "bytes": 1099776,
+        "pkts": 7382,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 962560,
+        "pkts": 7354,
+        "errs": 8,
+        "drops": 0
+      }
+    },
+    "utun0": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 63488,
+        "pkts": 550,
+        "errs": 0,
+        "drops": 0
+      }
+    },
+    "utun1": {
+      "incoming": {
+        "bytes": 0,
+        "pkts": 0,
+        "errs": 0,
+        "drops": 0
+      },
+      "out": {
+        "bytes": 63488,
+        "pkts": 550,
+        "errs": 0,
+        "drops": 0
+      }
+    }
+  }
+}
