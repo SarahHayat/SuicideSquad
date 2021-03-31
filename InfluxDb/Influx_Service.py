@@ -12,6 +12,15 @@ write_api = client.write_api(write_options=SYNCHRONOUS)
 
 
 def send_dict_influxdb(user, pointName, mainObject, field=False):
+    """
+            format dict to send data at influxDb
+
+            :param user: name on the user
+            :param pointName: name on the point
+            :param mainObject: object to iterate
+            :param field: optional tag
+
+    """
     if field:
         toIterate = mainObject.get(field)
     else:
@@ -24,15 +33,27 @@ def send_dict_influxdb(user, pointName, mainObject, field=False):
         write_api.write(bucket, org, point)
 
 
-def send_battery_influx(user, batteryData):
-    print(user, batteryData)
-    send_dict_influxdb(user, "battery", batteryData)
+def send_battery_influx(user, battery_data):
+    """
+               format dict battery to send data at influxDb
+
+               :param user: name on the user
+               :param battery_data: object to iterate
+
+    """
+    send_dict_influxdb(user, "battery", battery_data)
 
 
-def send_disk_influx(user, disksData):
-    print(user, disksData)
-    partitions = disksData.get("partitions")
-    io_stats = disksData.get("io_stats")
+def send_disk_influx(user, disks_data):
+    """
+               format dict dict to send data at influxDb
+
+               :param user: name on the user
+               :param disks_data: object to iterate
+
+    """
+    partitions = disks_data.get("partitions")
+    io_stats = disks_data.get("io_stats")
     for partition in partitions:
         tags = ("host", user)
         tagsPart = ("partition", partition.get("device"))
@@ -48,7 +69,13 @@ def send_disk_influx(user, disksData):
 
 
 def send_network_influx(user, networks_data):
-    print(user, networks_data)
+    """
+               format dict network to send data at influxDb
+
+               :param user: name on the user
+               :param networks_data: object to iterate
+
+    """
     for infos in networks_data.get("incoming"):
         point = Point("networks").tag("host", user).tag("direction", "in").field(infos, networks_data.get(
             "incoming").get(infos)).time(datetime.utcnow(), WritePrecision.NS)
@@ -60,7 +87,13 @@ def send_network_influx(user, networks_data):
 
 
 def send_cpu_influx(user, cpu_data):
-    print(user, cpu_data)
+    """
+               format dict cpu to send data at influxDb
+
+               :param user: name on the user
+               :param cpu_data: object to iterate
+
+    """
     send_dict_influxdb(user, "cpus", cpu_data, "times_dict")
     send_dict_influxdb(user, "cpus", cpu_data, "stats")
     for index, percent in enumerate(cpu_data.get("percent")):
@@ -70,6 +103,13 @@ def send_cpu_influx(user, cpu_data):
 
 
 def send_data(component, user, data):
+    """
+               switch case the call the wright function for the wright component
+
+               :param user: name on the user
+               :param batteryData: object to iterate
+
+    """
     send_component = {
         "battery": send_battery_influx,
         "network": send_network_influx,

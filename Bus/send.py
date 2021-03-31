@@ -12,8 +12,10 @@ USER = yaml.get("user")
 
 def send(component, data):
     """
-    :param component:
-    :param data:
+    publish message to rabbitmq
+
+    :param component: name of the hardware component
+    :param data: data of the component
     """
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()

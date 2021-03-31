@@ -5,12 +5,24 @@ from InfluxDb.Influx_Service import send_data
 
 
 def callback(ch, method, properties, body):
+    """
+            function to execute when publication 'logs' get consume
+
+            send body to influxDb
+
+    """
     dict_body = (json.loads(body))
-    print(f' [*] Job Received: {dict_body.get("user")}\'s  {dict_body.get("component")}')
+    print(f'Publication Received: {dict_body.get("user")}\'s  {dict_body.get("component")}')
     send_data(dict_body.get("component"), dict_body.get("user"), dict_body.get("data"))
 
 
 def consumer():
+    """
+             run consumer
+             listen on 'logs'
+             use function callback()
+
+     """
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
     channel.queue_declare(queue='logs', durable=True)
