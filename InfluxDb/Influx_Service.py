@@ -1,4 +1,4 @@
-import Collect_Hardware
+from Hardware import Collect_Hardware
 from datetime import datetime
 import yaml
 from influxdb_client import InfluxDBClient, Point, WritePrecision
