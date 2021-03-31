@@ -5,7 +5,8 @@ import yaml
 from datetime import timedelta
 
 from Bus.send import send
-import Collect_Hardware
+from Hardware import Collect_Hardware
+
 from Helpers.Task_Scheduler import Task_Scheduler
 
 with open(r'config.yaml') as file:
@@ -34,7 +35,7 @@ if __name__ == "__main__":
 
     collecting_disk = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS),
                                      execute=send,
-                                     args=("disk", Collect_Hardware.get_disk_satistique_io()))
+                                     args=("disk", Collect_Hardware.get_all_partition_all_usage()))
     collecting_disk.start()
 
     collecting_network = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS),
@@ -47,13 +48,13 @@ if __name__ == "__main__":
                                     args=("cpu", Collect_Hardware.get_cpu_informations()))
     collecting_cpu.start()
 
-while True:
-    try:
-        time.sleep(1)
-    except ProgramKilled:
-        print("Program killed: running cleanup code")
-        collecting_battery.stop()
-        collecting_disk.stop()
-        collecting_network.stop()
-        collecting_cpu.stop()
+    while True:
+        try:
+            time.sleep(1)
+        except ProgramKilled:
+            print("Program killed: running cleanup code")
+            collecting_battery.stop()
+            collecting_disk.stop()
+            collecting_network.stop()
+            collecting_cpu.stop()
         break
