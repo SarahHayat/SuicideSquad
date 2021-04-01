@@ -84,7 +84,6 @@ def get_battery_data():
     batt = psutil.sensors_battery()
     if batt is None:
         return "no battery is installed"
-
     return dict({"charge": round(batt.percent, 2),
                  "status": 0 if batt.power_plugged else 1,
                  "left": batt.secsleft if type(batt.secsleft) == int else 0})
@@ -173,3 +172,18 @@ def collect_all_data():
                  "cpu": get_cpu_informations(),
                  "battery": get_battery_data(),
                  "network": get_net_io_sent_recv()})
+
+
+def collect_data(component):
+    """
+               switch case the call the wright function for the wright component
+               :param component: name of the component
+    """
+    send_component = {
+        "battery": get_battery_data,
+        "network": get_net_io_sent_recv,
+        "disk": get_disk_data,
+        "cpu": get_cpu_informations
+
+    }
+    return send_component.get(component)()

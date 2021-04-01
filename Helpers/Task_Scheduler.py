@@ -16,13 +16,14 @@ class Task_Scheduler(threading.Thread):
 
     """
 
-    def __init__(self, interval, execute, args):
+    def __init__(self, interval, execute, *args, **kwargs):
         threading.Thread.__init__(self)
         self.daemon = False
         self.stopped = threading.Event()
         self.interval = interval
         self.execute = execute
         self.args = args
+        self.kwargs = kwargs
 
     def stop(self):
         """
@@ -42,4 +43,4 @@ class Task_Scheduler(threading.Thread):
             >>> Task_Scheduler.run()
         """
         while not self.stopped.wait(self.interval.total_seconds()):
-            self.execute(*self.args)
+            self.execute(*self.args, **self.kwargs)

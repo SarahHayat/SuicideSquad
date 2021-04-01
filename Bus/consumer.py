@@ -14,6 +14,7 @@ def callback(ch, method, properties, body):
 
     """
     dict_body = (json.loads(body))
+
     print(f'Publication Received: {dict_body.get("user")}\'s  {dict_body.get("component")}')
     send_data(dict_body.get("component"), dict_body.get("user"), dict_body.get("data"))
 
