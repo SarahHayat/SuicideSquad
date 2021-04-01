@@ -1,6 +1,8 @@
 import pika
 import json
 
+from pika.exchange_type import ExchangeType
+
 from InfluxDb.Influx_Service import send_data
 
 
@@ -25,6 +27,12 @@ def consumer():
      """
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
+    channel.exchange_declare(
+        exchange="test_exchange",
+        exchange_type=ExchangeType.direct,
+        passive=False,
+        durable=True,
+        auto_delete=False)
     channel.queue_declare(queue='logs', durable=True)
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume('logs', callback, auto_ack=True)

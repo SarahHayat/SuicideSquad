@@ -1,2 +1,2 @@
-timer: 5
-user: coco
+timer: 10
+user: !!python/name:builtins.str ''

@@ -6,7 +6,7 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 token = "uedzs7JQSQUVspWLfKgd0d8U074AATtXyzRt9XZvBjI3hK4_4LpBmjZm1YTfpSLZMntiVdE79tAZmwhDJaFRLw=="
 org = "Python_project"
-bucket = "test"
+bucket = "python_week"
 client = InfluxDBClient(url="https://eu-central-1-1.aws.cloud2.influxdata.com", token=token)
 write_api = client.write_api(write_options=SYNCHRONOUS)
 

@@ -34,17 +34,17 @@ if __name__ == "__main__":
                                         args=("battery", Collect_Hardware.get_battery_data()))
 
     collecting_battery.start()
-
+    time.sleep(1)
     collecting_disk = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS),
                                      execute=send,
                                      args=("disk", Collect_Hardware.get_disk_data()))
     collecting_disk.start()
-
+    time.sleep(1)
     collecting_network = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS),
                                         execute=send,
                                         args=("network", Collect_Hardware.get_net_io_sent_recv()))
     collecting_network.start()
-
+    time.sleep(1)
     collecting_cpu = Task_Scheduler(interval=timedelta(seconds=WAIT_TIME_SECONDS),
                                     execute=send,
                                     args=("cpu", Collect_Hardware.get_cpu_informations()))
