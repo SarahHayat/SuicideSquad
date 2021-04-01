@@ -18,75 +18,39 @@ def utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=tz)
 
 
-def get_data(client, measurement, host=None):
+def get_data(client, measurement, host=None, time=None):
     results = []
-    if host:
-        query = f'query = from(bucket: "python_week")\
-        |> range(start: -2d)\
-        |> filter(fn: (r) => r["_measurement"] == "{measurement}")\
-        |> filter(fn: (r) => r["host"] == "{host}")\
-        |> yield(name: "mean")'
-
-
-        print(f'query = {query}')
-        result = client.query_api().query(org=org, query=query)
-
-        for table in result:
-            for record in table.records:
-                results.append(dict({record.get_field(): record.get_value(),
-                                     "time": utc_to_local(record.get_time()),
-                                     "host": record.values.get("host")}))
+    query = f'query = from(bucket: "python_week")'
+    if time:
+        query += f'|> range(start: -{time})'
     else:
-        query = f'from(bucket: "python_week")\
-                    |> range(start: -2d)\
-                    |> filter(fn: (r) => r["_measurement"] == "{measurement}")'
+        query += f'|> range(start: -1d)'
+    query += f'|> filter(fn: (r) => r["_measurement"] == "{measurement}") '
+    if host:
+        query += f'|> filter(fn: (r) => r["host"] == "{host}")'
+    query += '|> yield(name: "mean")'
 
-        print(f'query = {query}')
-        result = client.query_api().query(org=org, query=query)
-
-        for table in result:
-            for record in table.records:
-                results.append(dict({record.get_field(): record.get_value(),
-                                     "time": utc_to_local(record.get_time()),
-                                     "host": record.values.get("host")}))
-
+    result = client.query_api().query(org=org, query=query)
+    for table in result:
+        for record in table.records:
+            results.append(dict({record.get_field(): record.get_value(),
+                                 "time": utc_to_local(record.get_time()),
+                                 "host": record.values.get("host")}))
     return results
 
 
-@app.route('/api/v1/cpus/', methods=['GET'])
-def api_cpu():
+@app.route('/api/', methods=['GET'])
+def api():
+    print(request.args['component'])
+    measurement, host, time = None, None, None
     if 'host' in request.args:
         host = str(request.args['host'])
-        return jsonify(get_data(client, "cpus", host))
-    else:
-        return jsonify(get_data(client, "cpus"))
+    if 'component' in request.args:
+        measurement = str(request.args['component'])
+    if 'time' in request.args:
+        time = str(request.args['time'])
 
-
-@app.route('/api/v1/disk/', methods=['GET'])
-def api_disk():
-    if 'host' in request.args:
-        host = str(request.args['host'])
-        return jsonify(get_data(client, "disk", host))
-    else:
-        return jsonify(get_data(client, "disk"))
-
-
-@app.route('/api/v1/networks/', methods=['GET'])
-def api_network():
-    if 'host' in request.args:
-        host = str(request.args['host'])
-        return jsonify(get_data(client, "networks", host))
-    else:
-        return jsonify(get_data(client, "networks"))
-
-
-@app.route('/api/v1/battery/', methods=['GET'])
-def api_battery():
-    if 'host' in request.args:
-        host = str(request.args['host'])
-        return jsonify(get_data(client, "battery", host))
-    else:
-        return jsonify(get_data(client, "battery"))
+    return jsonify(get_data(client, measurement, host, time))
 
 
 app.run()

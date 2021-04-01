@@ -13,7 +13,7 @@ import Helper
 
 
 def fetch_data():
-    req = requests.get(url=f"http://127.0.0.1:5000/api/v1/battery/")
+    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=battery")
     return Helper.extract_list_of_value(json.loads(req.content), "charge")
 
 
