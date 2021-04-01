@@ -22,7 +22,7 @@ def get_data(client, measurement, host=None):
     results = []
     if host:
         query = f'query = from(bucket: "python_week")\
-        |> range(start: -1h)\
+        |> range(start: -2d)\
         |> filter(fn: (r) => r["_measurement"] == "{measurement}")\
         |> filter(fn: (r) => r["host"] == "{host}")\
         |> yield(name: "mean")'
@@ -38,7 +38,7 @@ def get_data(client, measurement, host=None):
                                      "host": record.values.get("host")}))
     else:
         query = f'from(bucket: "python_week")\
-                    |> range(start: -1h)\
+                    |> range(start: -2d)\
                     |> filter(fn: (r) => r["_measurement"] == "{measurement}")'
 
         print(f'query = {query}')
