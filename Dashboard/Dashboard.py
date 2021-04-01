@@ -13,7 +13,7 @@ from dash.dependencies import Output, Input
 from flask import jsonify
 from pandas import json_normalize
 
-import Helpers_Pie
+import Helper
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -41,12 +41,16 @@ battery_data = json.loads(battery.content)
 
 
 def fetch_data_pie():
-    req = requests.get(url="http://127.0.0.1:5000/api/v1/disk/")
-    return Helpers_Pie.extract_list_of_value(json.loads(req.content), "used", "free")
+    req = requests.get(url="http://127.0.0.1:5000/api/v1/networks/")
+    return json.loads(req.content)
 
 
 df = fetch_data_pie()
-alluser = Helpers_Pie.extract_list_of_host(df)
+print(df)
+used = Helper.extract_list_of_value(df, "in")
+free = Helper.extract_list_of_value(df, "out")
+alluser = Helper.extract_list_of_host(used)
+print(alluser)
 app = dash.Dash(__name__)
 
 # ---------------------------------------------------------------
@@ -55,9 +59,9 @@ app.layout = html.Div([
     html.P("Names:"),
     dcc.Dropdown(
         id='names',
-        value='day',
-        options=[{'value': x, 'label': x}
-                 for x in ['smoker', 'day', 'time', 'sex']],
+        options=[{'value': user, 'label': user}
+                 for user in alluser],
+        value=alluser[0],
         clearable=False
     ),
     html.P("Values:"),
@@ -71,13 +75,19 @@ app.layout = html.Div([
     dcc.Graph(id="pie-chart"),
 ])
 
+
 @app.callback(
     Output("pie-chart", "figure"),
     [Input("names", "value"),
      Input("values", "value")])
 def generate_chart(names, values):
-    fig = px.pie(df, values=values, names=names)
+    usedValue = Helper.extract_data_where_users(used, names)[-1]
+    freeValue = Helper.extract_data_where_users(free, names)[-1]
+    value = {values: [usedValue.get("used"), freeValue.get("free")], names: ["used", "free"]}
+
+    fig = px.pie(value, values=values, names=names)
     return fig
+
 
 app.run_server(debug=True)
 
