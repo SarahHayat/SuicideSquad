@@ -29,13 +29,32 @@ app.layout = html.Div([
         value=all_user,
         labelStyle={'display': 'inline-block'}
     ),
-    dcc.Graph(id="line-chart"),
+    dcc.Graph(id="line-chart"),    dcc.Checklist(
+        id="couille",
+        options=[{"label": user, "value": user}
+                 for user in all_user],
+        value=all_user,
+        labelStyle={'display': 'inline-block'}
+    ),
+    dcc.Graph(id="chatte")
 ])
 
 
 @app.callback(
     Output("line-chart", "figure"),
     [Input("checklist", "value")])
+def update_line_chart(users):
+    df = fetch_data()
+    display = Helper.extract_data_where_users(df, users)
+    fig = px.line(display,
+                  y="charge", x="time", color='user')
+    return fig
+
+
+
+@app.callback(
+    Output("chatte", "figure"),
+    [Input("couille", "value")])
 def update_line_chart(users):
     df = fetch_data()
     display = Helper.extract_data_where_users(df, users)
