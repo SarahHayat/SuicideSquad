@@ -18,18 +18,18 @@ def fetch_data():
 
 
 def fetch_data_disk():
-    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=disk&time=6h")
+    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=disk&time=6h&tag=partition")
     return json.loads(req.content)
 
 
 df_disk = fetch_data_disk()
-print(df_disk)
 used = Helper.extract_list_of_value(df_disk, "used")
 free = Helper.extract_list_of_value(df_disk, "free")
-all_user_disk = Helper.extract_list_of_host(used)
+all_user_disk = Helper.extract_list_of_unique_value(used, "host")
+all_partitions = Helper.extract_list_of_unique_value(df_disk, "partition")[:-2]
 
 df = fetch_data()
-all_user = Helper.extract_list_of_host(df)
+all_user = Helper.extract_list_of_unique_value(df, "host")
 
 app = dash.Dash(__name__)
 
@@ -50,16 +50,35 @@ app.layout = html.Div([
         value=all_user_disk[0],
         clearable=False
     ),
-    dcc.Graph(id="pie-chart"),
+    html.P("Partition:"),
+    dcc.Dropdown(
+        id='partition',
+        options=[{'value': partition, 'label': partition}
+                 for partition in all_partitions],
+        value=all_partitions[0],
+        clearable=False
+    ), dcc.Graph(id="pie-chart")
 ])
 
 
 @app.callback(
     Output("pie-chart", "figure"),
-    [Input("names", "value")])
-def generate_chart(names):
-    usedValue = Helper.extract_data_where_users(used, names)[-1]
-    freeValue = Helper.extract_data_where_users(free, names)[-1]
+    [Input("names", "value"), Input("partition", "value")])
+def generate_chart(names, partition):
+    usedValue = Helper.extract_data_where_is_value(used, partition, "partition")
+    freeValue = Helper.extract_data_where_is_value(free, partition, "partition")
+
+    usedValue = Helper.extract_data_where_is_value(usedValue, names, "host")
+    freeValue = Helper.extract_data_where_is_value(freeValue, names, "host")
+    if len(usedValue) == 0:
+        usedValue = {"used": 0}
+    else:
+        usedValue = usedValue[-1]
+    if len(freeValue) == 0:
+        freeValue = {"free": 0}
+    else:
+        freeValue = freeValue[-1]
+
     value = {'values': [usedValue.get("used"), freeValue.get("free")], names: ["used", "free"]}
 
     fig = px.pie(value, values='values', names=names)
@@ -71,9 +90,9 @@ def generate_chart(names):
     [Input("checklist", "value")])
 def update_line_chart(users):
     df = fetch_data()
-    display = Helper.extract_data_where_users(df, users)
+    display = Helper.extract_data_where_is_value(df, users, "host")
     fig = px.line(display,
-                  y="charge", x="time", color='user')
+                  y="charge", x="time", color='host')
     return fig
 
 

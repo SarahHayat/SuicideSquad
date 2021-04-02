@@ -18,7 +18,7 @@ def utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=tz)
 
 
-def get_data(client, measurement, host=None, time=None):
+def get_data(client, measurement, host=None, time=None, additionalTag=None):
     results = []
     query = f'query = from(bucket: "python_week")'
     if time:
@@ -33,24 +33,29 @@ def get_data(client, measurement, host=None, time=None):
     result = client.query_api().query(org=org, query=query)
     for table in result:
         for record in table.records:
-            results.append(dict({record.get_field(): record.get_value(),
+            return_value = dict({record.get_field(): record.get_value(),
                                  "time": utc_to_local(record.get_time()),
-                                 "host": record.values.get("host")}))
+                                 "host": record.values.get("host")})
+            if additionalTag:
+                return_value[additionalTag] = record.values.get(additionalTag)
+            results.append(return_value)
     return results
 
 
 @app.route('/api/', methods=['GET'])
 def api():
     print(request.args['component'])
-    measurement, host, time = None, None, None
+    measurement, host, time, additionalTag = None, None, None, None
     if 'host' in request.args:
         host = str(request.args['host'])
     if 'component' in request.args:
         measurement = str(request.args['component'])
     if 'time' in request.args:
         time = str(request.args['time'])
+    if 'tag' in request.args:
+        additionalTag = str(request.args['tag'])
 
-    return jsonify(get_data(client, measurement, host, time))
+    return jsonify(get_data(client, measurement, host, time, additionalTag))
 
 
 app.run()
