@@ -67,7 +67,6 @@ app.layout = html.Div([
 def generate_chart(names, partition):
     usedValue = Helper.extract_data_where_is_value(used, partition, "partition")
     freeValue = Helper.extract_data_where_is_value(free, partition, "partition")
-
     usedValue = Helper.extract_data_where_is_value(usedValue, names, "host")
     freeValue = Helper.extract_data_where_is_value(freeValue, names, "host")
     if len(usedValue) == 0:
