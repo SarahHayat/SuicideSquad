@@ -71,10 +71,10 @@ app.layout = html.Div([
     Output("pie-chart", "figure"),
     [Input("names", "value"), Input("partition", "value")])
 def generate_chart(names, partition):
-    usedValue = Helper.extract_data_where_is_value(used, partition, "partition")
-    freeValue = Helper.extract_data_where_is_value(free, partition, "partition")
-    usedValue = Helper.extract_data_where_is_value(usedValue, names, "host")
-    freeValue = Helper.extract_data_where_is_value(freeValue, names, "host")
+    usedValue = Helper.extract_data_where_is_value(used, names, "host")
+    freeValue = Helper.extract_data_where_is_value(free, names, "host")
+    usedValue = Helper.extract_data_where_is_value(usedValue, partition, "partition")
+    freeValue = Helper.extract_data_where_is_value(freeValue, partition, "partition")
     if len(usedValue) == 0:
         usedValue = {"used": 0}
     else:
@@ -88,6 +88,16 @@ def generate_chart(names, partition):
 
     fig = px.pie(value, values='values', names=names)
     return fig
+
+
+@app.callback(
+    dash.dependencies.Output('partition', 'options'),
+    [dash.dependencies.Input('names', 'value')])
+def update_output(names):
+    usedValue = Helper.extract_data_where_is_value(used, names, "host")
+    all_partitions = Helper.extract_list_of_unique_value(usedValue, "partition")[:-2]
+    return [{'value': partition, 'label': partition}
+            for partition in all_partitions]
 
 
 @app.callback(
