@@ -25,7 +25,7 @@ def get_data(client, measurement, host=None, time=None, additionalTag=None, tagF
         query += f'|> range(start: -{time})'
     else:
         query += f'|> range(start: -1d)'
-        query += f'|> filter(fn: (r) => r["_measurement"] == "{measurement}") '
+    query += f'|> filter(fn: (r) => r["_measurement"] == "{measurement}") '
     if tagFilter:
         query += f'|> filter(fn: (r) => r["{tagFilter[0]}"] == "{tagFilter[1]}") '
     if host:
@@ -35,15 +35,18 @@ def get_data(client, measurement, host=None, time=None, additionalTag=None, tagF
     result = client.query_api().query(org=org, query=query)
     for table in result:
         for record in table.records:
-            results.append(dict({record.get_field(): record.get_value(),
+            return_value = dict({record.get_field(): record.get_value(),
                                  "time": utc_to_local(record.get_time()),
-                                 "host": record.values.get("host")}))
+                                 "host": record.values.get("host")})
+            if additionalTag:
+                return_value[additionalTag] = record.values.get(additionalTag)
+            results.append(return_value)
     return results
 
 
 @app.route('/api/', methods=['GET'])
 def api():
-    print(request.args['component'])
+
     measurement, host, time, additionalTag, tagFilter = None, None, None, None, None
     if 'host' in request.args:
         host = str(request.args['host'])
@@ -54,9 +57,11 @@ def api():
     if 'tag' in request.args:
         additionalTag = str(request.args['tag'])
     if 'filter' in request.args:
+
         tagFilter = request.args.getlist("filter")
 
     return jsonify(get_data(client, measurement, host, time, additionalTag, tagFilter))
 
 
 app.run()
+
