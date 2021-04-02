@@ -2,6 +2,7 @@
 usefull function to generate chat
 """
 from datetime import datetime
+from dateutil.parser import parse
 
 import numpy as np
 
@@ -58,14 +59,28 @@ def extract_data_where_is_value(datas, value, field):
     return list(filter(lambda data: data.get(field) in value, datas))
 
 
-def format_time(time):
+def format_time_object(dict_to_filter):
     """
-                   format gmt time string return time string in format HH:MM day/month
+                   format gmt time string return time object of a dict
 
-                    :param time: list to filter
-                    :type time: string
+                    :param dict_to_filter: dict to filter
+                    :type dict_to_filter: dict
                     :return: time
-                    :rtype: string
+                    :rtype: dict
 
     """
-    return datetime.strftime(datetime.strptime(time, '%a, %d %b %Y %H:%M:%S %Z'), ' %H:%M %d/%m')
+    dict_to_filter['time'] = parse(dict_to_filter.get('time')).isoformat()
+    return dict_to_filter
+
+
+def format_time_req(data):
+    """
+                   format gmt time string return time object in list of dict
+
+                    :param data: list to filter
+                    :type data: list
+                    :return: data filtered
+                    :rtype: list
+
+    """
+    return list(map(lambda item: format_time_object(item), data))

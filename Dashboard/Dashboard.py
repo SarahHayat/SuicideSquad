@@ -2,7 +2,6 @@
 The dashboard
 """
 import json
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -106,8 +105,9 @@ def update_output(names):
 def update_line_chart(users):
     df = fetch_data_battery()
     display = Helper.extract_data_where_is_value(df, users, "host")
+    display = Helper.format_time_req(display)
     fig = px.line(display,
-                  y="charge", x="time", color='host')
+                  y="charge", x='time', color='host')
     return fig
 
 
