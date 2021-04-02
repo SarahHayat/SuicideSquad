@@ -18,14 +18,16 @@ def utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=tz)
 
 
-def get_data(client, measurement, host=None, time=None):
+def get_data(client, measurement, host=None, time=None, additionalTag=None, tagFilter=None):
     results = []
     query = f'query = from(bucket: "python_week")'
     if time:
         query += f'|> range(start: -{time})'
     else:
         query += f'|> range(start: -1d)'
-    query += f'|> filter(fn: (r) => r["_measurement"] == "{measurement}") '
+        query += f'|> filter(fn: (r) => r["_measurement"] == "{measurement}") '
+    if tagFilter:
+        query += f'|> filter(fn: (r) => r["{tagFilter[0]}"] == "{tagFilter[1]}") '
     if host:
         query += f'|> filter(fn: (r) => r["host"] == "{host}")'
     query += '|> yield(name: "mean")'
@@ -42,15 +44,19 @@ def get_data(client, measurement, host=None, time=None):
 @app.route('/api/', methods=['GET'])
 def api():
     print(request.args['component'])
-    measurement, host, time = None, None, None
+    measurement, host, time, additionalTag, tagFilter = None, None, None, None, None
     if 'host' in request.args:
         host = str(request.args['host'])
     if 'component' in request.args:
         measurement = str(request.args['component'])
     if 'time' in request.args:
         time = str(request.args['time'])
+    if 'tag' in request.args:
+        additionalTag = str(request.args['tag'])
+    if 'filter' in request.args:
+        tagFilter = request.args.getlist("filter")
 
-    return jsonify(get_data(client, measurement, host, time))
+    return jsonify(get_data(client, measurement, host, time, additionalTag, tagFilter))
 
 
 app.run()
