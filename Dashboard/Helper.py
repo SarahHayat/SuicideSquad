@@ -41,6 +41,39 @@ def extract_list_of_unique_value(data, field):
     return np.unique(result)
 
 
+def extract_list_of_unique_key(data, key_index):
+    """
+            extract unique value of a given field in an object list
+
+
+             :param data: array to filter
+             :param field: field to extract unique occurrence
+             :type data: list
+             :type field: string
+             :return: filtered list
+             :rtype: list
+
+     """
+    result = list(map(lambda item: list(item.keys())[key_index], data))
+    return np.unique(result)
+
+def extract_data_where_is_key(datas, key):
+    """
+                keep the data of an object list where field is egual to value
+
+                :param datas: list to filter
+                :param value: value to find
+                :param field: field to filter
+                :type datas: list
+                :type value: any
+                :type field: string
+
+                :return: filtered list
+                :rtype: list
+
+    """
+    return list(filter(lambda data: list(data.keys())[0] == key, datas))
+
 def extract_data_where_is_value(datas, value, field):
     """
                 keep the data of an object list where field is egual to value
