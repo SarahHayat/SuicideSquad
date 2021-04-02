@@ -26,7 +26,7 @@ def consumer():
              use function callback()
 
      """
-    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost', heartbeat=5))
     channel = connection.channel()
     channel.exchange_declare(
         exchange="test_exchange",

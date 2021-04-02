@@ -12,12 +12,18 @@ import requests
 import Helper
 
 
-def fetch_data():
+def fetch_data_battery():
+    """
+            Get battery's data from Api.
+    """
     req = requests.get(url=f"http://127.0.0.1:5000/api/?component=battery")
     return Helper.extract_list_of_value(json.loads(req.content), "charge")
 
 
 def fetch_data_disk():
+    """
+                Get battery's disk from Api.
+    """
     req = requests.get(url=f"http://127.0.0.1:5000/api/?component=disk&time=6h&tag=partition")
     return json.loads(req.content)
 
@@ -28,7 +34,7 @@ free = Helper.extract_list_of_value(df_disk, "free")
 all_user_disk = Helper.extract_list_of_unique_value(used, "host")
 all_partitions = Helper.extract_list_of_unique_value(df_disk, "partition")[:-2]
 
-df = fetch_data()
+df = fetch_data_battery()
 all_user = Helper.extract_list_of_unique_value(df, "host")
 
 app = dash.Dash(__name__)
@@ -88,7 +94,7 @@ def generate_chart(names, partition):
     Output("line-chart", "figure"),
     [Input("checklist", "value")])
 def update_line_chart(users):
-    df = fetch_data()
+    df = fetch_data_battery()
     display = Helper.extract_data_where_is_value(df, users, "host")
     fig = px.line(display,
                   y="charge", x="time", color='host')

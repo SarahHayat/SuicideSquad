@@ -10,12 +10,6 @@ from Hardware import Collect_Hardware
 
 from Helpers.Task_Scheduler import Task_Scheduler
 
-execute()
-with open(r'config.yaml') as file:
-    yaml = yaml.load(file, Loader=yaml.FullLoader)
-
-WAIT_TIME_SECONDS = yaml.get("timer")
-
 
 class ProgramKilled(Exception):
     pass
@@ -26,6 +20,11 @@ def signal_handler(signum, frame):
 
 
 if __name__ == "__main__":
+    execute()
+    with open(r'config.yaml') as file:
+        yaml = yaml.load(file, Loader=yaml.FullLoader)
+
+    WAIT_TIME_SECONDS = yaml.get("timer")
     signal.signal(signal.SIGTERM, signal_handler)
     signal.signal(signal.SIGINT, signal_handler)
 
