@@ -23,13 +23,18 @@ def fetch_data_disk():
     """
                 Get battery's disk from Api.
     """
-    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=disk&time=6h&tag=partition")
+    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=disk&time=1h&tag=partition")
     return json.loads(req.content)
 
 
 def fetch_data_network(filter):
-    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=networks&time=6h&filter=direction&filter={filter}")
+    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=networks&time=1h&filter=direction&filter={filter}")
     return Helper.extract_list_of_value(json.loads(req.content), "bytes")
+
+
+def fetch_data_cpu():
+    req = requests.get(url=f"http://127.0.0.1:5000/api/?component=cpus&time=1h&filter=data&filter=cpu_percent")
+    return json.loads(req.content)
 
 
 df_disk = fetch_data_disk()
@@ -44,6 +49,10 @@ all_user = Helper.extract_list_of_unique_value(df, "host")
 df_network_bytes_in = fetch_data_network("in")
 df_network_bytes_out = fetch_data_network("out")
 all_user_bytes_network = Helper.extract_list_of_unique_value(df, "host")
+
+df_cpu = fetch_data_cpu()
+all_cpu = Helper.extract_list_of_unique_key(df_cpu, 0)
+all_user_cpu = Helper.extract_list_of_unique_value(df_cpu, "host")
 
 app = dash.Dash(__name__)
 
@@ -88,6 +97,22 @@ app.layout = html.Div([
         labelStyle={'display': 'inline-block'}
     ),
     dcc.Graph(id="line-chart-bytes-network"),
+    html.P("Cpu:"),
+    dcc.Dropdown(
+        id="cpu_user",
+        options=[{"label": user, "value": user}
+                 for user in all_user_cpu],
+        value=all_user_cpu[0],
+        clearable=False
+    ),
+    dcc.Dropdown(
+        id='cpu_percent',
+        options=[{'value': cpu, 'label': cpu}
+                 for cpu in all_cpu],
+        value=all_cpu[0],
+        clearable=False
+    ), dcc.Graph(id="pie-chart-cpu")
+
 
 ])
 
@@ -148,5 +173,28 @@ def update_line_chart_network(users, network):
                   y="bytes", x="time", color='host')
     return fig
 
+
+
+@app.callback(
+    Output("pie-chart-cpu", "figure"),
+    [Input("cpu_user", "value"), Input("cpu_percent", "value")])
+def generate_chart_cpu(names, percent):
+    used_value = Helper.extract_data_where_is_value(used, names, "host")
+    print(f'percent = {used_value}')
+
+    value = {'values': [used_value.get("used"), 100 - used_value], names: ["used", "free"]}
+
+    fig = px.pie(value, values='values', names=names)
+    return fig
+
+
+@app.callback(
+    dash.dependencies.Output('cpu_percent', 'options'),
+    [dash.dependencies.Input('cpu_user', 'value')])
+def update_output_cpu(names):
+    usedValue = Helper.extract_data_where_is_value(used, names, "host")
+    all_cpu = Helper.extract_list_of_unique_key(df_cpu, 0)
+    return [{'value': cpu, 'label': cpu}
+            for cpu in all_cpu]
 
 app.run_server(debug=True)
