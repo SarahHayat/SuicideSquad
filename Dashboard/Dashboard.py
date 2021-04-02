@@ -97,7 +97,7 @@ app.layout = html.Div([
         labelStyle={'display': 'inline-block'}
     ),
     dcc.Graph(id="line-chart-bytes-network"),
-    html.P("Cpu:"),
+    html.P("Names:"),
     dcc.Dropdown(
         id="cpu_user",
         options=[{"label": user, "value": user}
@@ -105,6 +105,7 @@ app.layout = html.Div([
         value=all_user_cpu[0],
         clearable=False
     ),
+    html.P("Cpu:"),
     dcc.Dropdown(
         id='cpu_percent',
         options=[{'value': cpu, 'label': cpu}
@@ -112,7 +113,6 @@ app.layout = html.Div([
         value=all_cpu[0],
         clearable=False
     ), dcc.Graph(id="pie-chart-cpu")
-
 
 ])
 
@@ -174,27 +174,27 @@ def update_line_chart_network(users, network):
     return fig
 
 
-
 @app.callback(
     Output("pie-chart-cpu", "figure"),
     [Input("cpu_user", "value"), Input("cpu_percent", "value")])
-def generate_chart_cpu(names, percent):
-    used_value = Helper.extract_data_where_is_value(used, names, "host")
-    print(f'percent = {used_value}')
-
-    value = {'values': [used_value.get("used"), 100 - used_value], names: ["used", "free"]}
+def generate_chart_cpu(names, cpu):
+    value_for_host = Helper.extract_data_where_is_value(df_cpu, names, "host")
+    actual_percent = Helper.extract_data_where_is_key(value_for_host, cpu)[-1]
+    value = {'values': [actual_percent.get(cpu), 100 - float(actual_percent.get(cpu))],
+             names: ["usage", "free"]}
 
     fig = px.pie(value, values='values', names=names)
     return fig
 
 
 @app.callback(
-    dash.dependencies.Output('cpu_percent', 'options'),
+    [dash.dependencies.Output('cpu_percent', 'options'), dash.dependencies.Output('cpu_percent', 'value')],
     [dash.dependencies.Input('cpu_user', 'value')])
 def update_output_cpu(names):
-    usedValue = Helper.extract_data_where_is_value(used, names, "host")
-    all_cpu = Helper.extract_list_of_unique_key(df_cpu, 0)
-    return [{'value': cpu, 'label': cpu}
-            for cpu in all_cpu]
+    all_value_for_user = Helper.extract_data_where_is_value(df_cpu, names, "host")
+    all_cpu = Helper.extract_list_of_unique_key(all_value_for_user, 0)
+    return [[{'value': cpu, 'label': cpu}
+             for cpu in all_cpu], all_cpu[0]]
+
 
 app.run_server(debug=True)
