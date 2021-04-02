@@ -8,7 +8,7 @@ def execute():
     """
            run the parser create in create_parser()
     """
-    parse_args(create_parser())
+    return parse_args(create_parser())
 
 
 def create_parser():
@@ -44,6 +44,6 @@ def parse_args(parser):
             data[key] = value
     with open('config.yaml', 'w') as outfile:
         yaml.dump(data, outfile, default_flow_style=False)
-
+    return arg_dict.get('timer')
 
 

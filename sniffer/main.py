@@ -28,10 +28,7 @@ def main():
     conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     conn.connect((host,0))
     while True:
-        raw_data, addr = conn.recvfrom(0)
-        print("yo")
-        print(raw_data)
-        print("yo")
+        raw_data, addr = conn.recvfrom(65535)
         dest_mac, src_mac, eth_proto, data = ethernet_frame(raw_data)
         print('\nEthernet Frame:')
         print('\t -' + 'Destination: {}, Source: {}, Protocol: {}'.format(dest_mac, src_mac, eth_proto))
